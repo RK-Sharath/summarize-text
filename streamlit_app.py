@@ -14,7 +14,7 @@ import os
 
 llm = LangChainInterface(
         model=ModelType.FLAN_T5_11B,
-        credentials=Credentials(api_key),
+        credentials=Credentials(),
         params=GenerateParams(
             decoding_method="greedy",
             max_new_tokens=1000,
