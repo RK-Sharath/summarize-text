@@ -1,5 +1,5 @@
 streamlit
-"ibm-generative-ai[langchain]"
+ibm-generative-ai[langchain]
 sentence_transformers
 InstructorEmbedding
 langchain
