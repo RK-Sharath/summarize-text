@@ -12,9 +12,13 @@ from genai.model import Credentials
 from genai.credentials import Credentials
 import os 
 
-api_key = st.text_input('genai_api_key', disabled=not txt_input)
 
-llm = LangChainInterface(
+
+
+
+
+def generate_response(txt):
+        llm = LangChainInterface(
         model=ModelType.FLAN_T5_11B,
         credentials=Credentials(api_key),
         params=GenerateParams(
@@ -24,9 +28,6 @@ llm = LangChainInterface(
             repetition_penalty=2,
         ).dict()
     )
-
-
-def generate_response(txt):
     # Split text
     text_splitter = CharacterTextSplitter()
     texts = text_splitter.split_text(txt)
