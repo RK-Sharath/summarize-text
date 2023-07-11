@@ -9,12 +9,13 @@ from langchain.chains.question_answering import load_qa_chain
 from genai.extensions.langchain import LangChainInterface
 from genai.schemas import ModelType, GenerateParams
 from genai.model import Credentials
+from genai.credentials import Credentials
 import os 
 
 
 llm = LangChainInterface(
         model=ModelType.FLAN_T5_11B,
-        credentials=Credentials(),
+        credentials=Credentials(api_key),
         params=GenerateParams(
             decoding_method="greedy",
             max_new_tokens=1000,
