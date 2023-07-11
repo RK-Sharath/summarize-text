@@ -12,6 +12,7 @@ from genai.model import Credentials
 from genai.credentials import Credentials
 import os 
 
+api_key = st.text_input('genai_api_key', disabled=not txt_input)
 
 llm = LangChainInterface(
         model=ModelType.FLAN_T5_11B,
@@ -52,7 +53,7 @@ result = []
 with st.form('summarize_form', clear_on_submit=True):
     api_key = st.text_input('genai_api_key', disabled=not txt_input)
     submitted = st.form_submit_button('Submit')
-    if submitted and genai_api_key.startswith('pak-'):
+    if submitted and api_key.startswith('pak-'):
         with st.spinner('Calculating...'):
             response = generate_response(txt_input)
             result.append(response)
