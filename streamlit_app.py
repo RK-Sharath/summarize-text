@@ -16,11 +16,10 @@ import os
 
 
 
-
 def generate_response(txt):
         llm = LangChainInterface(
         model=ModelType.FLAN_T5_11B,
-        credentials=Credentials(api_key),
+        credentials=Credentials(api_key=api_key),
         params=GenerateParams(
             decoding_method="greedy",
             max_new_tokens=1000,
@@ -52,7 +51,7 @@ txt_input = st.text_area('Enter your text', '', height=200)
 # Form to accept user's text input for summarization
 result = []
 with st.form('summarize_form', clear_on_submit=True):
-    api_key = st.text_input('genai_api_key', disabled=not txt_input)
+    api_key = st.text_input('Genai_api_key', disabled=not txt_input)
     submitted = st.form_submit_button('Submit')
     if submitted and api_key.startswith('pak-'):
         with st.spinner('Calculating...'):
