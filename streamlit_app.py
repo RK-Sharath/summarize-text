@@ -25,8 +25,7 @@ def generate_response(txt):
             max_new_tokens=1000,
             min_new_tokens=150,
             repetition_penalty=2,
-        ).dict()
-    )
+        ).dict())
     # Split text
     text_splitter = CharacterTextSplitter()
     texts = text_splitter.split_text(txt)
