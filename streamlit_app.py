@@ -16,24 +16,23 @@ import os
 
 
 
-def generate_response(txt):
-        llm = LangChainInterface(
+def generate_res(text):
+    #Define llm
+    llm = LangChainInterface(
         model=ModelType.FLAN_T5_11B,
-        credentials=Credentials(api_key=api_key),
+        credentials=Credentials(api_key=genai_api_key),
         params=GenerateParams(
             decoding_method="greedy",
-            max_new_tokens=1000,
+            max_new_tokens=600,
             min_new_tokens=150,
             repetition_penalty=2,
         ).dict())
     # Split text
-    text_splitter = CharacterTextSplitter()
-    texts = text_splitter.split_text(txt)
-    # Create multiple documents
-    docs = [Document(page_content=t) for t in texts]
+    splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
+    chunked_docs = splitter.create_documents(text)
     # Text summarization
     chain = load_summarize_chain(llm, chain_type='map_reduce')
-    return chain.run(docs)
+    return chain.run(chunked_docs)
 
 
 
