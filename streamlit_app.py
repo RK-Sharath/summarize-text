@@ -51,7 +51,7 @@ result = []
 with st.form('summarize_form', clear_on_submit=True):
     genai_api_key = st.text_input('Genai_api_key', disabled=not txt_input)
     submitted = st.form_submit_button('Submit')
-    if submitted and api_key.startswith('pak-'):
+    if submitted and genai_api_key.startswith('pak-'):
         with st.spinner('Calculating...'):
             response = generate_res(txt_input)
             result.append(response)
