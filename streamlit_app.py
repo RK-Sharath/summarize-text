@@ -53,7 +53,7 @@ with st.form('summarize_form', clear_on_submit=True):
     submitted = st.form_submit_button('Submit')
     if submitted and api_key.startswith('pak-'):
         with st.spinner('Calculating...'):
-            response = generate_response(txt_input)
+            response = generate_res(txt_input)
             result.append(response)
             del api_key
 
