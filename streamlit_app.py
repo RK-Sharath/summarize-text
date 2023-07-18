@@ -46,7 +46,7 @@ def generate_res(text):
     docs = [Document(page_content=t) for t in texts]
     # Text summarization
     chain = load_summarize_chain(llm, chain_type='map_reduce')
-    return chain.run(texts)
+    return chain.run(docs)
 
 
 # Form to accept user's text input for summarization
