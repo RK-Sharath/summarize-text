@@ -15,8 +15,6 @@ txt_input = st.text_area('Enter your text', '', height=400)
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
-chunk_size = st.sidebar.text_input("Select Chunk size", type="default")
-chunk_overlap = st.sidebar.text_input("Select Chunk overlap", type="default")
 max_new_tokens = st.sidebar.text_input("Select max new tokens", type="default")
 min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
      
@@ -36,7 +34,7 @@ def generate_response(txt):
     ).dict()) 
      
     # Split text
-    text_splitter = CharacterTextSplitter(chunk_size=chunk_size,chunk_overlap=chunk_overlap)
+    text_splitter = CharacterTextSplitter()
     texts = text_splitter.split_text(txt)
      
     # Create multiple documents
