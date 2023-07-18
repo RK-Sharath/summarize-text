@@ -46,7 +46,7 @@ def generate_res(answer):
 
 
 # Form to accept user's text input for summarization
-#result = []
+result = []
 with st.form('summarize_form', clear_on_submit=True):
     submitted = st.form_submit_button('Submit')
     if submitted and genai_api_key.startswith('pak-'):
