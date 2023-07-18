@@ -45,7 +45,7 @@ def generate_res(query):
     return chain.run(docs)
 
 
-# Form to accept user's text input for summarization
+# Capture text input for summarization
 result = []
 with st.form('summarize_form', clear_on_submit=True):
     submitted = st.form_submit_button('Submit')
