@@ -53,7 +53,7 @@ with st.form('summarize_form', clear_on_submit=True):
         with st.spinner('Working on it...'):
             response = generate_res(input_data)
             result.append(response)
-             del genai_api_key
+          del genai_api_key
              st.info(response)
 
 #if len(result):
