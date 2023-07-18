@@ -20,7 +20,7 @@ min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
      
 
 
-def generate_res(answer):
+def generate_res(query):
      
     # Instantiate the LLM model
     llm = LangChainInterface(
@@ -35,7 +35,7 @@ def generate_res(answer):
      
     # Split text
     text_splitter = CharacterTextSplitter()
-    texts = text_splitter.split_text(txt)
+    texts = text_splitter.split_text(query)
      
     # Create multiple documents
     docs = [Document(page_content=t) for t in texts]
