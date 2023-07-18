@@ -36,7 +36,7 @@ def generate_response(txt):
     ).dict()) 
      
     # Split text
-    text_splitter = CharacterTextSplitter()
+    text_splitter = CharacterTextSplitter(chunk_size=chunk_size,chunk_overlap=chunk_overlap)
     texts = text_splitter.split_text(txt)
      
     # Create multiple documents
