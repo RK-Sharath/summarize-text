@@ -12,8 +12,20 @@ from genai.model import Credentials
 from genai.credentials import Credentials
 import os 
 
+st.title("Text Summarization App")
+st.caption("This app was developed by Sharath Kumar RK, Ecosystem Engineering Watsonx team")
 
+# Text input
+txt_input = st.text_area('Enter your text', '', height=400)
 
+genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
+genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
+chunk_size = st.sidebar.text_input("Select Chunk size", type="default")
+chunk_overlap = st.sidebar.text_input("Select Chunk overlap", type="default")
+max_new_tokens = st.sidebar.text_input("Select Chunk overlap", type="default")
+min_new_tokens = st.sidebar.text_input("Select Chunk overlap", type="default")
+    
+    
 
 
 def generate_res(text):
@@ -23,36 +35,24 @@ def generate_res(text):
         credentials=Credentials(api_key=genai_api_key),
         params=GenerateParams(
             decoding_method="greedy",
-            max_new_tokens=600,
-            min_new_tokens=150,
+            max_new_tokens=max_new_tokens,
+            min_new_tokens=min_new_tokens,
             repetition_penalty=2,
         ).dict())
     # Split text
-    splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
+    splitter = CharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     chunked_docs = splitter.create_documents(text)
     # Text summarization
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(chunked_docs)
 
 
-
-
-# Page title
-st.set_page_config(page_title='🦜🔗 Text Summarization using Watsonx')
-st.title('🦜🔗 Text Summarization App using Watsonx')
-
-
-
-# Text input
-txt_input = st.text_area('Enter your text', '', height=400)
-
 # Form to accept user's text input for summarization
 result = []
 with st.form('summarize_form', clear_on_submit=True):
-    genai_api_key = st.text_input('Genai_api_key', disabled=not txt_input)
     submitted = st.form_submit_button('Submit')
     if submitted and genai_api_key.startswith('pak-'):
-        with st.spinner('Calculating...'):
+        with st.spinner('Working on it...'):
             response = generate_res(txt_input)
             result.append(response)
             del genai_api_key
