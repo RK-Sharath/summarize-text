@@ -19,16 +19,7 @@ chunk_size = st.sidebar.text_input("Select Chunk size", type="default")
 chunk_overlap = st.sidebar.text_input("Select Chunk overlap", type="default")
 max_new_tokens = st.sidebar.text_input("Select max new tokens", type="default")
 min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
-    
-llm = LangChainInterface(
-    model=ModelType.FLAN_T5_11B,
-    credentials=Credentials(api_key=genai_api_key),
-    params=GenerateParams(
-    decoding_method="greedy",
-    max_new_tokens=max_new_tokens,
-    min_new_tokens=min_new_tokens,
-    repetition_penalty=2,
-    ).dict())  
+     
 
 
 def generate_response(txt):
@@ -43,6 +34,15 @@ def generate_response(txt):
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(docs)
 
+llm = LangChainInterface(
+    model=ModelType.FLAN_T5_11B,
+    credentials=Credentials(api_key=genai_api_key),
+    params=GenerateParams(
+    decoding_method="greedy",
+    max_new_tokens=max_new_tokens,
+    min_new_tokens=min_new_tokens,
+    repetition_penalty=2,
+    ).dict()) 
 
 # Form to accept user's text input for summarization
 result = []
