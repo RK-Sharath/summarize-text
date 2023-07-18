@@ -38,13 +38,13 @@ def generate_res(text):
 
 
 # Page title
-st.set_page_config(page_title='🦜🔗 Text Summarization App using Watsonx')
+st.set_page_config(page_title='🦜🔗 Text Summarization using Watsonx')
 st.title('🦜🔗 Text Summarization App using Watsonx')
 
 
 
 # Text input
-txt_input = st.text_area('Enter your text', '', height=200)
+txt_input = st.text_area('Enter your text', '', height=400)
 
 # Form to accept user's text input for summarization
 result = []
