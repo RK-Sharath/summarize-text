@@ -20,23 +20,23 @@ chunk_overlap = st.sidebar.text_input("Select Chunk overlap", type="default")
 max_new_tokens = st.sidebar.text_input("Select max new tokens", type="default")
 min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
     
-    
+llm = LangChainInterface(
+    model=ModelType.FLAN_T5_11B,
+    credentials=Credentials(api_key=genai_api_key),
+    params=GenerateParams(
+    decoding_method="greedy",
+    max_new_tokens=max_new_tokens,
+    min_new_tokens=min_new_tokens,
+    repetition_penalty=2,
+    ).dict())  
 
 
-def generate_res(text):
-    #Define llm
-    llm = LangChainInterface(
-        model=ModelType.FLAN_T5_11B,
-        credentials=Credentials(api_key=genai_api_key),
-        params=GenerateParams(
-            decoding_method="greedy",
-            max_new_tokens=max_new_tokens,
-            min_new_tokens=min_new_tokens,
-            repetition_penalty=2,
-        ).dict())
+def generate_response(txt):
+    # Instantiate the LLM model
+    llm = llm
     # Split text
     text_splitter = CharacterTextSplitter()
-    texts = text_splitter.split_documents(text)
+    texts = text_splitter.split_text(txt)
     # Create multiple documents
     docs = [Document(page_content=t) for t in texts]
     # Text summarization
@@ -50,7 +50,7 @@ with st.form('summarize_form', clear_on_submit=True):
     submitted = st.form_submit_button('Submit')
     if submitted and genai_api_key.startswith('pak-'):
         with st.spinner('Working on it...'):
-            response = generate_res(txt_input)
+            response = generate_response(txt_input)
             result.append(response)
             del genai_api_key
 
