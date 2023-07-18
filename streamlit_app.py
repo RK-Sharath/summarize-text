@@ -23,18 +23,9 @@ min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
 
 
 def generate_response(txt):
+     
     # Instantiate the LLM model
-    llm = llm
-    # Split text
-    text_splitter = CharacterTextSplitter()
-    texts = text_splitter.split_text(txt)
-    # Create multiple documents
-    docs = [Document(page_content=t) for t in texts]
-    # Text summarization
-    chain = load_summarize_chain(llm, chain_type='map_reduce')
-    return chain.run(docs)
-
-llm = LangChainInterface(
+    llm = LangChainInterface(
     model=ModelType.FLAN_T5_11B,
     credentials=Credentials(api_key=genai_api_key),
     params=GenerateParams(
@@ -43,6 +34,18 @@ llm = LangChainInterface(
     min_new_tokens=min_new_tokens,
     repetition_penalty=2,
     ).dict()) 
+     
+    # Split text
+    text_splitter = CharacterTextSplitter()
+    texts = text_splitter.split_text(txt)
+     
+    # Create multiple documents
+    docs = [Document(page_content=t) for t in texts]
+     
+    # Text summarization
+    chain = load_summarize_chain(llm, chain_type='map_reduce')
+    return chain.run(docs)
+
 
 # Form to accept user's text input for summarization
 result = []
