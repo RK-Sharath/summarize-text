@@ -40,8 +40,12 @@ def generate_res(text):
             repetition_penalty=2,
         ).dict())
     # Split text
-    splitter = CharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    chunked_docs = splitter.split_texts(text)
+   # splitter = CharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+   # chunked_docs = splitter.split_texts(text)
+    text_splitter = CharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    texts = text_splitter.split_text(txt)
+    # Create multiple documents
+    docs = [Document(page_content=t) for t in texts]
     # Text summarization
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(chunked_docs)
