@@ -2,15 +2,10 @@ import streamlit as st
 from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader, PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.chains.question_answering import load_qa_chain
 from genai.extensions.langchain import LangChainInterface
 from genai.schemas import ModelType, GenerateParams
-from genai.model import Credentials
 from genai.credentials import Credentials
-import os 
 
 st.title("Text Summarization App")
 st.caption("This app was developed by Sharath Kumar RK, Ecosystem Engineering Watsonx team")
