@@ -8,10 +8,10 @@ from genai.schemas import ModelType, GenerateParams
 from genai.credentials import Credentials
 
 st.title("Text Summarization App")
-st.caption("This app was developed by Sharath Kumar RK, Ecosystem Engineering Watsonx team")
+st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 # Text input
-txt_input = st.text_area('Enter your text', '', height=400)
+input_data = st.text_area('Enter your text here', '', height=400)
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
@@ -20,7 +20,7 @@ min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
      
 
 
-def generate_response(txt):
+def generate_res(answer):
      
     # Instantiate the LLM model
     llm = LangChainInterface(
@@ -46,15 +46,15 @@ def generate_response(txt):
 
 
 # Form to accept user's text input for summarization
-result = []
+#result = []
 with st.form('summarize_form', clear_on_submit=True):
     submitted = st.form_submit_button('Submit')
     if submitted and genai_api_key.startswith('pak-'):
         with st.spinner('Working on it...'):
-            response = generate_response(txt_input)
+            response = generate_res(input_data)
             result.append(response)
             del genai_api_key
 
-if len(result):
-    st.info(response)
+#if len(result):
+st.info(response)
     
