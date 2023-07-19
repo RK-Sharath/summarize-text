@@ -24,7 +24,7 @@ def generate_res(query):
      
     # Instantiate the LLM model
     llm = LangChainInterface(
-    model=ModelType.FLAN_T5_11B,
+    model="google/flan-t5-xxl",
     credentials=Credentials(api_key=genai_api_key),
     params=GenerateParams(
     decoding_method="greedy",
