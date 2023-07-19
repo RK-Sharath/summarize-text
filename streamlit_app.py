@@ -7,7 +7,7 @@ from genai.extensions.langchain import LangChainInterface
 from genai.schemas import ModelType, GenerateParams
 from genai.credentials import Credentials
 
-st.title("Text Summarization App")
+st.subheader("Text Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 # Text input
