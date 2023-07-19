@@ -54,7 +54,7 @@ with st.form('summarize_form', clear_on_submit=True):
         with st.spinner('Working on it...'):
             response = generate_res(input_data)
             result.append(response)
-            del openai_api_key
+            del genai_api_key
 
 if len(result):
     st.info(response)
