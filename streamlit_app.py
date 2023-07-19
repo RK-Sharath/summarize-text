@@ -49,11 +49,11 @@ def generate_res(query):
 result = []
 with st.form('summarize_form', clear_on_submit=True):
     submitted = st.form_submit_button('Submit')
-     if submitted and genai_api_key.startswith('pak-'):
-          with st.spinner('Working on it...'):
-               response = generate_res(input_data)
-               result.append(response)
-               del genai_api_key
+    if submitted and genai_api_key.startswith('pak-'):
+         with st.spinner('Working on it...'):
+              response = generate_res(input_data)
+              result.append(response)
+              del genai_api_key
 
 
 if len(result):
