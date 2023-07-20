@@ -7,11 +7,11 @@ from genai.extensions.langchain import LangChainInterface
 from genai.schemas import ModelType, GenerateParams
 from genai.credentials import Credentials
 
-st.subheader("Text Summarization App powered by IBM Watsonx")
+st.title("Text Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 # Text input
-input_data = st.text_area('Enter your text below:', '', height=400)
+input_data = st.text_area('Enter your text below (<2500 words):', '', height=400)
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
