@@ -15,7 +15,7 @@ input_data = st.text_area('Enter your text below (<2500 words):', '', height=400
 if len(input_data) > 2500:
     st.error("You can't use more than 2500 words due to tokens limit")
 else:
-    st.success(text)
+    st.success(input_data)
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
