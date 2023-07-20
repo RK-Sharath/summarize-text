@@ -11,7 +11,7 @@ st.title("Text Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 # Text input
-input_data = st.text_area('Enter your text below (<2500 words):', max_chars=5000, height=400)
+input_data = st.text_area('Enter your text below (<2500 words):', max_chars=2000, height=400)
 
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
