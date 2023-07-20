@@ -11,12 +11,8 @@ st.title("Text Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 # Text input
-input_data = st.text_area('Enter your text below (<2500 words):', '', height=400)
+input_data = st.text_area('Enter your text below (<2500 words):', '', max_chars=5000, height=400)
 
-if len(input_data) > 2500:
-    st.error("You can't use more than 2500 words due to tokens limit")
-else:
-    st.success(input_data)
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
