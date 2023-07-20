@@ -12,6 +12,7 @@ st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineerin
 
 # Text input
 input_data = st.text_area('Enter your text below (<2500 words):', '', height=400)
+
 if len(input_data) > 2500:
     st.error("You can't use more than 2500 words due to tokens limit")
 else:
