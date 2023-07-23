@@ -12,14 +12,16 @@ st.title("Text Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 # Text input
-input_data = st.text_area('Enter your text below (<2500 words):', max_chars=2000, height=400)
+input_data = st.text_area('Enter your text below :', height=400)
 st.write(input_data)
 
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
-max_new_tokens = st.sidebar.text_input("Select max new tokens", type="default")
-min_new_tokens = st.sidebar.text_input("Select min new tokens", type="default")
+max_new_tokens = st.sidebar.number_input("Select max new tokens")
+min_new_tokens = st.sidebar.number_input("Select min new tokens")
+chunk_size = st.sidebar.number_input("Select chunk size")
+chunk_overlap = st.sidebar.number_input("Select chunk overlap")
      
 
 
@@ -38,7 +40,7 @@ def generate_res(query):
      
     # Split text
     text_splitter = CharacterTextSplitter()
-    texts = text_splitter.split_text(query)
+    texts = text_splitter.split_text(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
      
     # Create multiple documents
     docs = [Document(page_content=t) for t in texts]
