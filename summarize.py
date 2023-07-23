@@ -59,6 +59,26 @@ def split_texts(text, chunk_size, chunk_overlap, split_method):
 
     return splits
 
+def generate_res(query):
+     
+    # Instantiate the LLM model
+    llm = LangChainInterface(
+    model="google/flan-t5-xxl",
+    credentials=Credentials(api_key=st.session_state.genai_api_key),
+    params=GenerateParams(
+    decoding_method=decoding_method,
+    max_new_tokens=max_new_tokens,
+    min_new_tokens=min_new_tokens,
+    repetition_penalty=2,
+    ).dict()) 
+     
+    # Text summarization
+    chain = load_summarize_chain(llm, chain_type='map_reduce')
+    return chain.run(query)
+    
+
+def main():
+
     if 'genai_api_key' not in st.session_state:
         genai_api_key = st.text_input(
             'Please enter your GenAI API key', value="", placeholder="Enter the GenAI API key which begins with pak-")
@@ -80,47 +100,23 @@ def split_texts(text, chunk_size, chunk_overlap, split_method):
                  # Load and process the uploaded PDF or TXT files.
         loaded_text = load_docs(uploaded_files)
         st.write("Documents uploaded and processed.")
+        
+        # Split the document into chunks
+        splitter_type = "RecursiveCharacterTextSplitter"
+        splits = split_texts(loaded_text, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
 
-
-def generate_res(query):
-     
-    # Instantiate the LLM model
-    llm = LangChainInterface(
-    model="google/flan-t5-xxl",
-    credentials=Credentials(api_key=st.session_state.genai_api_key),
-    params=GenerateParams(
-    decoding_method=decoding_method,
-    max_new_tokens=max_new_tokens,
-    min_new_tokens=min_new_tokens,
-    repetition_penalty=2,
-    ).dict()) 
-     
-    # Text summarization
-    chain = load_summarize_chain(llm, chain_type='map_reduce')
-    return chain.run(query)
-
-
-# Split the document into chunks
-splitter_type = "RecursiveCharacterTextSplitter"
-splits = split_texts(loaded_text, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
-
-# Display the number of text chunks
-num_chunks = len(splits)
-st.write(f"Number of text chunks: {num_chunks}")
-
-# Capture text input for summarization
-
-result = []
-with st.form('summarize_form', clear_on_submit=True):
-    submitted = st.form_submit_button('Submit')
-    if submitted and genai_api_key.startswith('pak-'):
-        with st.spinner('Working on it...'):
-            response = generate_res(input_data)
+        # Display the number of text chunks
+        num_chunks = len(splits)
+        st.write(f"Number of text chunks: {num_chunks}")
+        
+        
+        submitted = st.form_submit_button('Submit')
+        if submitted:
+            response = generate_res(loaded_text)
+            st.write("Answer:", response)
             st.download_button("Download the results", response)
-            result.append(response)
-            del genai_api_key
             
 
-if len(result):
-     st.info(response)
+if __name__ == "__main__":
+    main()
     
