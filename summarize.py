@@ -61,5 +61,5 @@ with st.form('summarize_form', clear_on_submit=True):
 
 if len(result):
      st.info(response)
-     st.download_button("Download the results", response)
+     st.download_button(label="Download the results", data=response)
     
