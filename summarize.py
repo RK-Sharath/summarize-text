@@ -23,6 +23,27 @@ max_new_tokens = st.sidebar.number_input("Select max new tokens")
 min_new_tokens = st.sidebar.number_input("Select min new tokens")
 chunk_size = st.sidebar.number_input("Select chunk size")
 chunk_overlap = st.sidebar.number_input("Select chunk overlap")
+
+@st.cache_data
+def load_docs(files):
+    st.info("`Reading doc ...`")
+    all_text = ""
+    for file_path in files:
+        file_extension = os.path.splitext(file_path.name)[1]
+        if file_extension == ".pdf":
+            pdf_reader = PyPDF2.PdfReader(file_path)
+            text = ""
+            for page in pdf_reader.pages:
+                text += page.extract_text()
+            all_text += text
+        elif file_extension == ".txt":
+            stringio = StringIO(file_path.getvalue().decode("utf-8"))
+            text = stringio.read()
+            all_text += text
+        else:
+            st.warning('Please provide txt or pdf file.', icon="⚠️")
+    return all_text
+     
      
 #@st.cache_resource
 def split_texts(text, chunk_size, chunk_overlap, split_method):
@@ -58,9 +79,12 @@ def generate_res(query):
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(query)
 
+loaded_text = load_docs(uploaded_files)
+st.write("Documents uploaded and processed.")
+
 # Split the document into chunks
 splitter_type = "RecursiveCharacterTextSplitter"
-splits = split_texts(input_data, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
+splits = split_texts(loaded_text, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
 
 # Display the number of text chunks
 num_chunks = len(splits)
