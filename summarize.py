@@ -9,10 +9,8 @@ from genai.schemas import ModelType, GenerateParams
 from genai.credentials import Credentials
 
 
-st.title("Text Summarization App powered by IBM Watsonx")
+st.title("Document Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
-
-
 
 
 #genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
@@ -22,6 +20,7 @@ min_new_tokens = st.sidebar.number_input("Select min new tokens")
 chunk_size = st.sidebar.number_input("Select chunk size")
 chunk_overlap = st.sidebar.number_input("Select chunk overlap")
 decoding_method = st.sidebar.text_input("Decoding method (Choose either greedy or sample) ", type="default")
+
 
 @st.cache_data
 def load_docs(files):
@@ -42,6 +41,23 @@ def load_docs(files):
         else:
             st.warning('Please provide txt or pdf file.', icon="⚠️")
     return all_text
+     
+     
+#@st.cache_resource
+def split_texts(text, chunk_size, chunk_overlap, split_method):
+
+    st.info("`Splitting doc ...`")
+
+    split_method = "RecursiveTextSplitter"
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+
+    splits = text_splitter.split_text(text)
+    if not splits:
+        st.error("Failed to split document")
+        st.stop()
+
+    return splits
 
     if 'genai_api_key' not in st.session_state:
         genai_api_key = st.text_input(
@@ -64,23 +80,6 @@ def load_docs(files):
                  # Load and process the uploaded PDF or TXT files.
         loaded_text = load_docs(uploaded_files)
         st.write("Documents uploaded and processed.")
-     
-     
-#@st.cache_resource
-def split_texts(text, chunk_size, chunk_overlap, split_method):
-
-    st.info("`Splitting doc ...`")
-
-    split_method = "RecursiveTextSplitter"
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-
-    splits = text_splitter.split_text(text)
-    if not splits:
-        st.error("Failed to split document")
-        st.stop()
-
-    return splits
 
 
 def generate_res(query):
