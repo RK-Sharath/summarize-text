@@ -12,11 +12,10 @@ from genai.credentials import Credentials
 st.title("Text Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
-# Text input
-input_data = st.text_area('Enter your text below :', height=400)
 
 
-genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
+
+#genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
 max_new_tokens = st.sidebar.number_input("Select max new tokens")
 min_new_tokens = st.sidebar.number_input("Select min new tokens")
@@ -43,6 +42,28 @@ def load_docs(files):
         else:
             st.warning('Please provide txt or pdf file.', icon="⚠️")
     return all_text
+
+    if 'genai_api_key' not in st.session_state:
+        genai_api_key = st.text_input(
+            'Please enter your GenAI API key', value="", placeholder="Enter the GenAI API key which begins with pak-")
+        if genai_api_key:
+            st.session_state.genai_api_key = genai_api_key
+            os.environ["GENAI_API_KEY"] = genai_api_key
+        else:
+            return
+    else:
+        os.environ["GENAI_API_KEY"] = st.session_state.genai_api_key
+
+    uploaded_files = st.file_uploader("Upload a PDF or TXT Document", type=[
+                                      "pdf", "txt"], accept_multiple_files=True)
+
+    if uploaded_files:
+        # Check if last_uploaded_files is not in session_state or if uploaded_files are different from last_uploaded_files
+        if 'last_uploaded_files' not in st.session_state or st.session_state.last_uploaded_files != uploaded_files:
+            st.session_state.last_uploaded_files = uploaded_files
+                 # Load and process the uploaded PDF or TXT files.
+        loaded_text = load_docs(uploaded_files)
+        st.write("Documents uploaded and processed.")
      
      
 #@st.cache_resource
@@ -67,7 +88,7 @@ def generate_res(query):
     # Instantiate the LLM model
     llm = LangChainInterface(
     model="google/flan-t5-xxl",
-    credentials=Credentials(api_key=genai_api_key),
+    credentials=Credentials(api_key=st.session_state.genai_api_key),
     params=GenerateParams(
     decoding_method=decoding_method,
     max_new_tokens=max_new_tokens,
@@ -79,7 +100,7 @@ def generate_res(query):
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(query)
 
-loaded_text = load_docs(input_data)
+loaded_text = load_docs(loaded_text)
 st.write("Documents uploaded and processed.")
 
 # Split the document into chunks
