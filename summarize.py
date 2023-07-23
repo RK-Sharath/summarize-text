@@ -55,11 +55,11 @@ with st.form('summarize_form', clear_on_submit=True):
     if submitted and genai_api_key.startswith('pak-'):
         with st.spinner('Working on it...'):
             response = generate_res(input_data)
+            st.download_button("Download the results", response)
             result.append(response)
             del genai_api_key
             
 
 if len(result):
-     st.download_button("Download the results", response)
      st.info(response)
     
