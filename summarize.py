@@ -99,8 +99,6 @@ def generate_res(query):
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(query)
 
-loaded_text = load_docs(loaded_text)
-st.write("Documents uploaded and processed.")
 
 # Split the document into chunks
 splitter_type = "RecursiveCharacterTextSplitter"
