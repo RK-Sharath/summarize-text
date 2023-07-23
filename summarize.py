@@ -113,9 +113,9 @@ def main():
         st.write(f"Number of text chunks: {num_chunks}")
         
         # Generate summary
-        submitted = st.form_submit_button('Submit')
-        if submitted:
-            response = generate_res(loaded_text)
+        query = st.text_input("Enter your query:")
+        if query:
+            response = generate_res(query)
             st.write("Answer:", response)
             st.download_button("Download the results", response)
             
