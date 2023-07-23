@@ -1,6 +1,7 @@
 import streamlit as st
 from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chains.question_answering import load_qa_chain
 from genai.extensions.langchain import LangChainInterface
