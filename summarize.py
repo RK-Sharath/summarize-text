@@ -23,6 +23,21 @@ min_new_tokens = st.sidebar.number_input("Select min new tokens")
 chunk_size = st.sidebar.number_input("Select chunk size")
 chunk_overlap = st.sidebar.number_input("Select chunk overlap")
      
+#@st.cache_resource
+def split_texts(text, chunk_size, chunk_overlap, split_method):
+
+    st.info("`Splitting doc ...`")
+
+    split_method = "RecursiveTextSplitter"
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+
+    splits = text_splitter.split_text(text)
+    if not splits:
+        st.error("Failed to split document")
+        st.stop()
+
+    return splits
 
 
 def generate_res(query):
@@ -38,17 +53,17 @@ def generate_res(query):
     repetition_penalty=2,
     ).dict()) 
      
-    # Split text
-    text_splitter = CharacterTextSplitter()
-    texts = text_splitter.split_text(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-     
-    # Create multiple documents
-    docs = [Document(page_content=t) for t in texts]
-     
     # Text summarization
     chain = load_summarize_chain(llm, chain_type='map_reduce')
-    return chain.run(docs)
+    return chain.run(query)
 
+# Split the document into chunks
+splitter_type = "RecursiveCharacterTextSplitter"
+splits = split_texts(loaded_text, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
+
+# Display the number of text chunks
+num_chunks = len(splits)
+st.write(f"Number of text chunks: {num_chunks}")
 
 # Capture text input for summarization
 
