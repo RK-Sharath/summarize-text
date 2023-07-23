@@ -110,7 +110,7 @@ def main():
         num_chunks = len(splits)
         st.write(f"Number of text chunks: {num_chunks}")
         
-        
+        # Generate summary
         submitted = st.form_submit_button('Submit')
         if submitted:
             response = generate_res(loaded_text)
