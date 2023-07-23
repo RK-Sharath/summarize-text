@@ -57,8 +57,9 @@ with st.form('summarize_form', clear_on_submit=True):
             response = generate_res(input_data)
             result.append(response)
             del genai_api_key
-            st.download_button("Download the results", response)
+            
 
 if len(result):
      st.info(response)
+     st.download_button("Download the results", response)
     
