@@ -59,7 +59,7 @@ def generate_res(query):
 
 # Split the document into chunks
 splitter_type = "RecursiveCharacterTextSplitter"
-splits = split_texts(loaded_text, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
+splits = split_texts(input_data, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
 
 # Display the number of text chunks
 num_chunks = len(splits)
