@@ -22,6 +22,7 @@ max_new_tokens = st.sidebar.number_input("Select max new tokens")
 min_new_tokens = st.sidebar.number_input("Select min new tokens")
 chunk_size = st.sidebar.number_input("Select chunk size")
 chunk_overlap = st.sidebar.number_input("Select chunk overlap")
+decoding_method = st.sidebar.text_input("Decoding method (Choose either greedy or sample) ", type="default")
 
 @st.cache_data
 def load_docs(files):
@@ -68,7 +69,7 @@ def generate_res(query):
     model="google/flan-t5-xxl",
     credentials=Credentials(api_key=genai_api_key),
     params=GenerateParams(
-    decoding_method="greedy",
+    decoding_method=decoding_method,
     max_new_tokens=max_new_tokens,
     min_new_tokens=min_new_tokens,
     repetition_penalty=2,
