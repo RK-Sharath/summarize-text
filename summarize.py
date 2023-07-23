@@ -14,7 +14,6 @@ st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineerin
 
 # Text input
 input_data = st.text_area('Enter your text below :', height=400)
-st.write(input_data)
 
 
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
