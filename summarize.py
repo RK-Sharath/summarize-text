@@ -74,10 +74,20 @@ def generate_res(query):
     min_new_tokens=min_new_tokens,
     repetition_penalty=2,
     ).dict()) 
-     
+
+    prompt = """ 
+    Write a concise summary of the following:
+    {text}
+    Summary:
+    """
+    PROMPT = PromptTemplate(
+    template=prompt,
+    input_variables=["text"],
+    )
+
     # Text summarization
-    chain = load_summarize_chain(llm, chain_type='map_reduce')
-    return chain.run(query)
+    chain = load_summarize_chain(llm, chain_type='map_reduce',return_intermediate_steps=False, map_prompt=PROMPT, combine_prompt=PROMPT, verbose=True)
+    return chain({"input_documents": splits}, return_only_outputs=True)
     
 
 def main():
