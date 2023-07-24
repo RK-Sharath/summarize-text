@@ -55,7 +55,7 @@ def split_texts(text, chunk_size, chunk_overlap, split_method):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size, chunk_overlap=chunk_overlap)
 
-    splits = text_splitter.split_text(text)
+    splits = text_splitter.split_documents(text)
     if not splits:
         st.error("Failed to split document")
         st.stop()
