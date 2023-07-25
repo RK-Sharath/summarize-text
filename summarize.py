@@ -32,6 +32,7 @@ with st.sidebar:
         ('greedy', 'sample')
     )
 temperature = st.sidebar.number_input("Temperature (Choose a decimal number between 0 & 2)")
+num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_value=10, step=1, value=1)
 
 
 uploaded_file = st.file_uploader('', type=(['pdf',"tsv","csv","txt","tab","xlsx","xls"]))
