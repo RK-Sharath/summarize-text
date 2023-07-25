@@ -10,127 +10,66 @@ from genai.schemas import ModelType, GenerateParams
 from genai.credentials import Credentials
 import PyPDF2
 from io import StringIO
+from langchain.document_loaders import PyPDFLoader
+from langchain import PromptTemplate
 
 
 st.title("Document Summarization App powered by IBM Watsonx")
 st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineering Watsonx team")
 
 
-#genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
+genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
 max_new_tokens = st.sidebar.number_input("Select max new tokens")
 min_new_tokens = st.sidebar.number_input("Select min new tokens")
 chunk_size = st.sidebar.number_input("Select chunk size")
 chunk_overlap = st.sidebar.number_input("Select chunk overlap")
-decoding_method = st.sidebar.text_input("Decoding method (Choose either greedy or sample) ", type="default")
-
+chain_type = st.sidebar.selectbox("Chain Type", ["map_reduce", "stuff", "refine"])
+temperature = st.sidebar.number_input("Temperature (Choose a decimal number between 0 & 2)")
 
 @st.cache_data
-def load_docs(files):
-    st.info("`Reading doc ...`")
-    all_text = ""
-    for file_path in files:
-        file_extension = os.path.splitext(file_path.name)[1]
-        if file_extension == ".pdf":
-            pdf_reader = PyPDF2.PdfReader(file_path)
-            text = ""
-            for page in pdf_reader.pages:
-                text += page.extract_text()
-            all_text += text
-        elif file_extension == ".txt":
-            stringio = StringIO(file_path.getvalue().decode("utf-8"))
-            text = stringio.read()
-            all_text += text
-        else:
-            st.warning('Please provide txt or pdf file.', icon="⚠️")
-    return all_text
-     
-     
-#@st.cache_resource
-def split_texts(text, chunk_size, chunk_overlap, split_method):
+def setup_documents(pdf_file_path, chunk_size, chunk_overlap):
+    loader = PyPDFLoader(pdf_file_path)
+    docs_raw = loader.load()
+    docs_raw_text = [doc.page_content for doc in docs_raw]
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    docs = text_splitter.create_documents(docs_raw_text)
+    return docs
 
-    st.info("`Splitting doc ...`")
 
-    split_method = "RecursiveTextSplitter"
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    pages=text_splitter.split_text(text)
-
-    splits = text_splitter.create_documents(pages)
-    if not splits:
-        st.error("Failed to split document")
-        st.stop()
-
-    return splits
-
-def generate_res(query):
-     
-    # Instantiate the LLM model
-    llm = LangChainInterface(
-    model="google/flan-t5-xxl",
-    credentials=Credentials(api_key=st.session_state.genai_api_key),
-    params=GenerateParams(
-    decoding_method=decoding_method,
-    max_new_tokens=max_new_tokens,
-    min_new_tokens=min_new_tokens,
-    repetition_penalty=2,
-    ).dict()) 
-
-    prompt = """ 
-    Write a concise summary of the following:
-    {text}
-    Summary:
-    """
-    PROMPT = PromptTemplate(
-    template=prompt,
-    input_variables=["text"],
-    )
-
-    # Text summarization
-    chain = load_summarize_chain(llm, chain_type='map_reduce',return_intermediate_steps=False, map_prompt=PROMPT, combine_prompt=PROMPT, verbose=True)
-    return chain({"input_documents": splits}, return_only_outputs=True)
+def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
+    custom_prompt = custom_prompt + """:\n\n {text}"""
+    COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
+    MAP_PROMPT = PromptTemplate(template="Summarize:\n\n{text}", input_variables=["text"])
+    creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
+    # Define parameters
+    params = GenerateParams(decoding_method=decoding_method, temperature=temperature, max_new_tokens=max_tokens, min_new_tokens=min_tokens, repetition_penalty=repetition_penalty)
+    # Instantiate LLM model
+    llm=LangChainInterface(model=model, params=params, credentials=creds)
+    if chain_type == "map_reduce":
+        chain = load_summarize_chain(llm, chain_type=chain_type, 
+                                    map_prompt=MAP_PROMPT, combine_prompt=COMBINE_PROMPT)
+    else:
+        chain = load_summarize_chain(llm, chain_type=chain_type)
+    summaries = []
+    for i in range(num_summaries):
+        summary_output = chain({"input_documents": docs}, return_only_outputs=True)["output_text"]
+        summaries.append(summary_output)
     
+    return summaries
+
 
 def main():
-
-    if 'genai_api_key' not in st.session_state:
-        genai_api_key = st.text_input(
-            'Please enter your GenAI API key', value="", placeholder="Enter the GenAI API key which begins with pak-")
-        if genai_api_key:
-            st.session_state.genai_api_key = genai_api_key
-            os.environ["GENAI_API_KEY"] = genai_api_key
-        else:
-            return
-    else:
-        os.environ["GENAI_API_KEY"] = st.session_state.genai_api_key
-
-    uploaded_files = st.file_uploader("Upload a PDF or TXT Document", type=[
-                                      "pdf", "txt"], accept_multiple_files=True)
-
-    if uploaded_files:
-        # Check if last_uploaded_files is not in session_state or if uploaded_files are different from last_uploaded_files
-        if 'last_uploaded_files' not in st.session_state or st.session_state.last_uploaded_files != uploaded_files:
-            st.session_state.last_uploaded_files = uploaded_files
-                 # Load and process the uploaded PDF or TXT files.
-        loaded_text = load_docs(uploaded_files)
-        st.write("Documents uploaded and processed.")
-        
-        # Split the document into chunks
-        splitter_type = "RecursiveCharacterTextSplitter"
-        splits = split_texts(loaded_text, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_method=splitter_type)
-
-        # Display the number of text chunks
-        num_chunks = len(splits)
-        st.write(f"Number of text chunks: {num_chunks}")
-        
-        # Generate summary
-        query = st.text_input("Enter your query:")
-        if query:
-            response = generate_res(query)
-            st.write("Answer:", response)
-            st.download_button("Download the results", response)
-            
+    user_prompt = st.text_input("Enter the user prompt")
+    pdf_file_path = st.text_input("Enter the pdf file path")
+    if pdf_file_path != "":
+        docs = setup_documents(pdf_file_path, chunk_size, chunk_overlap)
+        st.write("Pdf was loaded successfully")
+        if st.button("Summarize"):
+            result = custom_summary(docs,llm, user_prompt, chain_type, num_summaries)
+            st.write("Summaries:")
+            for summary in result:
+                st.write(summary)
 
 if __name__ == "__main__":
     main()
-    
