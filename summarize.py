@@ -94,13 +94,13 @@ def main():
     # Display the number of text chunks
     num_chunks = len(docs)
     st.write(f"Number of text chunks: {num_chunks}")
-        st.write("Pdf was loaded successfully")
-        if st.button("Summarize"):
-            with st.spinner('Working on it...'):
-                result = custom_summary(docs,llm, user_prompt, chain_type, num_summaries)
-                st.write("Summaries:")
-                for summary in result:
-                    st.write(summary)
+    st.write("Pdf was loaded successfully")
+    if st.button("Summarize"):
+        with st.spinner('Working on it...'):
+            result = custom_summary(docs,llm, user_prompt, chain_type, num_summaries)
+            st.write("Summaries:")
+            for summary in result:
+                st.write(summary)
 
 if __name__ == "__main__":
     main()
