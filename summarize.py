@@ -32,6 +32,7 @@ with st.sidebar:
         ('greedy', 'sample')
     )
 temperature = st.sidebar.number_input("Temperature (Choose a decimal number between 0 & 2)")
+repetition_penalty = st.sidebar.number_input("Repetition penalty (Choose either 1 or 2)", value=2)
 num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_value=10, step=1, value=1)
 
 
@@ -60,15 +61,14 @@ def setup_documents(chunk_size, chunk_overlap):
     docs = text_splitter.create_documents(docs_raw_text)
     return docs
 
-    creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
-    
-    # Define parameters
-    params = GenerateParams(decoding_method=decoding_method, temperature=temperature, max_new_tokens=max_tokens, min_new_tokens=min_tokens, repetition_penalty=repetition_penalty)
-    
-    # Instantiate LLM model
-    llm=LangChainInterface(model=model, params=params, credentials=creds)
     
 def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
+
+    creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
+    # Define parameters
+    params = GenerateParams(decoding_method=decoding_method, temperature=temperature, max_new_tokens=max_tokens, min_new_tokens=min_tokens, repetition_penalty=repetition_penalty)
+    # Instantiate LLM model
+    llm=LangChainInterface(model=model, params=params, credentials=creds)
     
     custom_prompt = custom_prompt + """:\n\n {text}"""
     COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
