@@ -36,10 +36,8 @@ repetition_penalty = st.sidebar.number_input("Repetition penalty (Choose either 
 num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_value=10, step=1, value=1)
 
 
-uploaded_file = st.file_uploader("Upload a PDF or TXT Document", type=(['pdf',"tsv","csv","txt","tab","xlsx","xls"]))
+uploaded_file = st.file_uploader("Upload a PDF or TXT Document", type=(['pdf', "txt"]))
 temp_file_path = os.getcwd()
-while uploaded_file is None:
-    x = 1
         
 if uploaded_file is not None:
     # Save the uploaded file to a temporary location
