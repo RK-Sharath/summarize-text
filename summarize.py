@@ -90,7 +90,7 @@ def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
 
 def main():
     user_prompt = st.text_input("Enter the user prompt")
-    if temp_file_path != "":
+    if temp_file_path != " ":
         docs = setup_documents(chunk_size, chunk_overlap)
         st.write("Pdf was loaded successfully")
         if st.button("Summarize"):
