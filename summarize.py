@@ -31,7 +31,7 @@ with st.sidebar:
         "Select decoding method",
         ('greedy', 'sample')
     )
-temperature = st.sidebar.number_input("Temperature (Choose a decimal number between 0 & 2)")
+temperature = st.sidebar.number_input("Temperature (Choose a decimal number between 0 & 2)", value=0.4)
 repetition_penalty = st.sidebar.number_input("Repetition penalty (Choose either 1 or 2)", value=2)
 num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_value=10, step=1, value=1)
 
