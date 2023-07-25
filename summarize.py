@@ -60,13 +60,6 @@ def setup_documents(chunk_size, chunk_overlap):
     docs = text_splitter.create_documents(docs_raw_text)
     return docs
 
-
-def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
-    
-    custom_prompt = custom_prompt + """:\n\n {text}"""
-    COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
-    MAP_PROMPT = PromptTemplate(template="Summarize:\n\n{text}", input_variables=["text"])
-    
     creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
     
     # Define parameters
@@ -74,6 +67,12 @@ def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
     
     # Instantiate LLM model
     llm=LangChainInterface(model=model, params=params, credentials=creds)
+    
+def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
+    
+    custom_prompt = custom_prompt + """:\n\n {text}"""
+    COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
+    MAP_PROMPT = PromptTemplate(template="Summarize:\n\n{text}", input_variables=["text"])
     
     if chain_type == "map_reduce":
         chain = load_summarize_chain(llm, chain_type=chain_type, 
