@@ -38,6 +38,8 @@ num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_
 
 uploaded_file = st.file_uploader("Upload a PDF or TXT Document", type=(['pdf', "txt"]))
 temp_file_path = os.getcwd()
+while uploaded_file is None:
+    x = 1
         
 if uploaded_file is not None:
     # Save the uploaded file to a temporary location
@@ -46,7 +48,7 @@ if uploaded_file is not None:
     with open(temp_file_path, "wb") as temp_file:
         temp_file.write(uploaded_file.read())
 
-    st.write("Full path of the uploaded file:", temp_file_path)
+    #st.write("Full path of the uploaded file:", temp_file_path)
 
 
 
