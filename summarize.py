@@ -21,10 +21,10 @@ st.caption("This app was developed by Sharath Kumar RK, IBM Ecosystem Engineerin
 model = st.radio("Select the Watsonx LLM model",('google/flan-t5-xl','google/flan-t5-xxl','google/flan-ul2'))
 genai_api_key = st.sidebar.text_input("GenAI API Key", type="password")
 genai_api_url = st.sidebar.text_input("GenAI API URL", type="default")
-max_new_tokens = st.sidebar.number_input("Select max new tokens")
-min_new_tokens = st.sidebar.number_input("Select min new tokens")
-chunk_size = st.sidebar.number_input("Select chunk size")
-chunk_overlap = st.sidebar.number_input("Select chunk overlap")
+max_new_tokens = st.sidebar.number_input("Select max new tokens", value=600)
+min_new_tokens = st.sidebar.number_input("Select min new tokens", value=150)
+chunk_size = st.sidebar.number_input("Select chunk size", value=1200)
+chunk_overlap = st.sidebar.number_input("Select chunk overlap", value=100)
 chain_type = st.sidebar.selectbox("Chain Type", ["map_reduce", "stuff", "refine"])
 with st.sidebar:
     decoding_method = st.radio(
@@ -63,12 +63,6 @@ def setup_documents(chunk_size, chunk_overlap):
 
     
 def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
-
-    creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
-    # Define parameters
-    params = GenerateParams(decoding_method=decoding_method, temperature=temperature, max_new_tokens=max_tokens, min_new_tokens=min_tokens, repetition_penalty=repetition_penalty)
-    # Instantiate LLM model
-    llm=LangChainInterface(model=model, params=params, credentials=creds)
     
     custom_prompt = custom_prompt + """:\n\n {text}"""
     COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
@@ -90,7 +84,12 @@ def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
 
 def main():
     user_prompt = st.text_input("Enter the user prompt")
-    if temp_file_path != " ":
+    creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
+    # Define parameters
+    params = GenerateParams(decoding_method=decoding_method, temperature=temperature, max_new_tokens=max_tokens, min_new_tokens=min_tokens, repetition_penalty=repetition_penalty)
+    # Instantiate LLM model
+    llm=LangChainInterface(model=model, params=params, credentials=creds)
+    if temp_file_path != "":
         docs = setup_documents(chunk_size, chunk_overlap)
         st.write("Pdf was loaded successfully")
         if st.button("Summarize"):
