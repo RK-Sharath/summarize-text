@@ -25,6 +25,11 @@ min_new_tokens = st.sidebar.number_input("Select min new tokens")
 chunk_size = st.sidebar.number_input("Select chunk size")
 chunk_overlap = st.sidebar.number_input("Select chunk overlap")
 chain_type = st.sidebar.selectbox("Chain Type", ["map_reduce", "stuff", "refine"])
+with st.sidebar:
+    decoding_method = st.radio(
+        "Select decoding method",
+        ('greedy', 'sample')
+    )
 temperature = st.sidebar.number_input("Temperature (Choose a decimal number between 0 & 2)")
 
 @st.cache_data
