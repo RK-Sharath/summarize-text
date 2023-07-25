@@ -61,7 +61,7 @@ def setup_documents(chunk_size, chunk_overlap):
     docs = text_splitter.create_documents(docs_raw_text)
     return docs
 
-    
+
 def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
     
     custom_prompt = custom_prompt + """:\n\n {text}"""
@@ -91,12 +91,16 @@ def main():
     llm=LangChainInterface(model=model, params=params, credentials=creds)
     if temp_file_path != "":
         docs = setup_documents(chunk_size, chunk_overlap)
+    # Display the number of text chunks
+    num_chunks = len(docs)
+    st.write(f"Number of text chunks: {num_chunks}")
         st.write("Pdf was loaded successfully")
         if st.button("Summarize"):
-            result = custom_summary(docs,llm, user_prompt, chain_type, num_summaries)
-            st.write("Summaries:")
-            for summary in result:
-                st.write(summary)
+            with st.spinner('Working on it...'):
+                result = custom_summary(docs,llm, user_prompt, chain_type, num_summaries)
+                st.write("Summaries:")
+                for summary in result:
+                    st.write(summary)
 
 if __name__ == "__main__":
     main()
