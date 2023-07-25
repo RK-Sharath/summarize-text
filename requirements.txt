@@ -1,7 +1,5 @@
 streamlit
 ibm-generative-ai[langchain]
-sentence_transformers
-InstructorEmbedding
 langchain
 ibm-generative-ai
 PyPDF2==3.0.1
