@@ -54,12 +54,17 @@ if uploaded_file is not None:
 
 @st.cache_data
 def setup_documents(chunk_size, chunk_overlap):
-    loader = PyPDFLoader(temp_file_path)
-    docs_raw = loader.load()
-    docs_raw_text = [doc.page_content for doc in docs_raw]
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    docs = text_splitter.create_documents(docs_raw_text)
-    return docs
+    if file_extension == ".pdf":
+        loader = PyPDFLoader(temp_file_path)
+        docs_raw = loader.load()
+        docs_raw_text = [doc.page_content for doc in docs_raw]
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        docs = text_splitter.create_documents(docs_raw_text)
+    elif file_extension == ".txt":
+            stringio = StringIO(file_path.getvalue().decode("utf-8"))
+            docs = stringio.read()
+            all_text += docs
+        return docs
 
 
 def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
