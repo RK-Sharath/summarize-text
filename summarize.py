@@ -36,7 +36,7 @@ repetition_penalty = st.sidebar.number_input("Repetition penalty (Choose either 
 num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_value=10, step=1, value=1)
 
 
-uploaded_file = st.file_uploader("Upload a PDF or TXT Document", type=(['pdf', "txt"]))
+uploaded_file = st.file_uploader("Upload a PDF Document", type=(['pdf']))
 temp_file_path = os.getcwd()
 while uploaded_file is None:
     x = 1
@@ -54,17 +54,12 @@ if uploaded_file is not None:
 
 @st.cache_data
 def setup_documents(chunk_size, chunk_overlap):
-    if file_extension == ".pdf":
-        loader = PyPDFLoader(temp_file_path)
-        docs_raw = loader.load()
-        docs_raw_text = [doc.page_content for doc in docs_raw]
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-        docs = text_splitter.create_documents(docs_raw_text)
-    elif file_extension == ".txt":
-            stringio = StringIO(file_path.getvalue().decode("utf-8"))
-            docs = stringio.read()
-            all_text += docs
-        return docs
+    loader = PyPDFLoader(temp_file_path)
+    docs_raw = loader.load()
+    docs_raw_text = [doc.page_content for doc in docs_raw]
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    docs = text_splitter.create_documents(docs_raw_text)
+    return docs
 
 
 def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
