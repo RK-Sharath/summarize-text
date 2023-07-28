@@ -52,7 +52,7 @@ if uploaded_file is not None:
 
 
 
-@st.cache_data
+#@st.cache_data
 def setup_documents(chunk_size, chunk_overlap):
     loader = PyPDFLoader(temp_file_path)
     docs_raw = loader.load()
@@ -61,7 +61,7 @@ def setup_documents(chunk_size, chunk_overlap):
     docs = text_splitter.create_documents(docs_raw_text)
     return docs
 
-
+@st.cache_resource
 def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
     
     custom_prompt = custom_prompt + """:\n\n {text}"""
