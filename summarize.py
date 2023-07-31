@@ -62,7 +62,7 @@ def setup_documents(chunk_size, chunk_overlap):
     return docs
 
 @st.cache_resource
-def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
+def custom_summary(_docs,llm, custom_prompt, chain_type, num_summaries):
     
     custom_prompt = custom_prompt + """:\n\n {text}"""
     COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
