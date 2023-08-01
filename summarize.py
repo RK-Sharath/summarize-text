@@ -83,7 +83,7 @@ def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
 
 
 def main():
-    user_prompt = st.text_input("Enter the user prompt")
+    user_prompt = st.text_input("Enter the user prompt", height=300)
     creds = Credentials(api_key=genai_api_key, api_endpoint=genai_api_url)
     # Define parameters
     params = GenerateParams(decoding_method=decoding_method, temperature=temperature, max_new_tokens=max_new_tokens, min_new_tokens=min_new_tokens, repetition_penalty=repetition_penalty)
