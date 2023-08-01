@@ -38,8 +38,8 @@ num_summaries = st.sidebar.number_input("Number of Summaries", min_value=1, max_
 
 uploaded_file = st.file_uploader("Upload a PDF Document", type=(['pdf']))
 temp_file_path = os.getcwd()
-while uploaded_file is None:
-    x = 1
+#while uploaded_file is None:
+    #x = 1
         
 if uploaded_file is not None:
     # Save the uploaded file to a temporary location
@@ -62,7 +62,7 @@ def setup_documents(chunk_size, chunk_overlap):
     return docs
 
 @st.cache_resource
-def custom_summary(_docs,llm, custom_prompt, chain_type, num_summaries):
+def custom_summary(docs,llm, custom_prompt, chain_type, num_summaries):
     
     custom_prompt = custom_prompt + """:\n\n {text}"""
     COMBINE_PROMPT = PromptTemplate(template=custom_prompt, input_variables=["text"])
