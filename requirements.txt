@@ -1,7 +1,7 @@
 streamlit
 ibm-generative-ai[langchain]
 langchain
-ibm-generative-ai
+ibm-generative-ai==0.1.19
 PyPDF2==3.0.1
 pypdf
 transformers
